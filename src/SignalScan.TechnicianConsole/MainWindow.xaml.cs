@@ -38,6 +38,7 @@ public partial class MainWindow : Window
         {
             _lastScanResult = await _collector.CollectAsync();
             RenderScan(_lastScanResult);
+            ApplyDefaultRecommendationText(_lastScanResult);
             ExportReportButton.IsEnabled = true;
             StatusMessageTextBlock.Text = "Read-only scan complete. Review findings before exporting a report draft.";
         }
@@ -175,9 +176,39 @@ public partial class MainWindow : Window
             ClientNameTextBox.Text,
             ClientContactTextBox.Text,
             DeviceLabelTextBox.Text,
+            TechnicianReviewedSummaryTextBox.Text,
+            NextStepRecommendationTextBox.Text,
             TechnicianNotesTextBox.Text,
             selectedService);
     }
+
+    private void ApplyDefaultRecommendationText(ScanResult scanResult)
+    {
+        if (string.IsNullOrWhiteSpace(TechnicianReviewedSummaryTextBox.Text))
+        {
+            TechnicianReviewedSummaryTextBox.Text = BuildDefaultSummary(scanResult);
+        }
+
+        if (string.IsNullOrWhiteSpace(NextStepRecommendationTextBox.Text))
+        {
+            NextStepRecommendationTextBox.Text = BuildDefaultNextStep(scanResult.OverallStatus);
+        }
+    }
+
+    private static string BuildDefaultSummary(ScanResult scanResult)
+    {
+        var status = HealthStatusFormatter.Format(scanResult.OverallStatus);
+        return $"Technician-reviewed summary pending. Initial read-only SignalScan status: {status}. Review the System Profile, Performance, Maintenance, and Security findings before sharing with the client.";
+    }
+
+    private static string BuildDefaultNextStep(HealthStatus status) =>
+        status switch
+        {
+            HealthStatus.Good => "Routine maintenance or monitoring is recommended. No urgent issue was identified by the read-only scan.",
+            HealthStatus.AttentionNeeded => "A tune-up or technician review is recommended to address the items marked Attention Needed.",
+            HealthStatus.Critical => "Urgent technician review is recommended before relying on this device for important work.",
+            _ => "Manual technician review is needed because one or more checks could not be completed or require interpretation."
+        };
 
     private sealed record FindingRow(string Category, string Name, string Status, string Details);
 

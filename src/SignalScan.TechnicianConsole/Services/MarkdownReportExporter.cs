@@ -32,6 +32,22 @@ public sealed class MarkdownReportExporter
         builder.AppendLine();
         builder.AppendLine($"Status: {HealthStatusFormatter.Format(scanResult.OverallStatus)}");
         builder.AppendLine();
+        builder.AppendLine("## Technician-Reviewed Summary");
+        builder.AppendLine();
+        builder.AppendLine(ValueOrBlank(context.TechnicianReviewedSummary));
+        builder.AppendLine();
+        builder.AppendLine("## Next-Step Recommendation");
+        builder.AppendLine();
+        builder.AppendLine(ValueOrBlank(context.NextStepRecommendation));
+        builder.AppendLine();
+        builder.AppendLine("## Recommended Service Package");
+        builder.AppendLine();
+        builder.AppendLine(ValueOrBlank(context.RecommendedService));
+        builder.AppendLine();
+        builder.AppendLine("## Technician Notes");
+        builder.AppendLine();
+        builder.AppendLine(string.IsNullOrWhiteSpace(context.TechnicianNotes) ? "No technician notes entered." : context.TechnicianNotes.Trim());
+        builder.AppendLine();
         builder.AppendLine("## System Profile");
         builder.AppendLine();
         builder.AppendLine($"- Computer Name: {profile.ComputerName}");
@@ -63,14 +79,6 @@ public sealed class MarkdownReportExporter
         AppendFindings(builder, "Security Findings", scanResult, "Security");
         AppendFindings(builder, "System Profile Findings", scanResult, "System Profile");
 
-        builder.AppendLine("## Technician Notes");
-        builder.AppendLine();
-        builder.AppendLine(string.IsNullOrWhiteSpace(context.TechnicianNotes) ? "No technician notes entered." : context.TechnicianNotes.Trim());
-        builder.AppendLine();
-        builder.AppendLine("## Recommended Service");
-        builder.AppendLine();
-        builder.AppendLine(ValueOrBlank(context.RecommendedService));
-        builder.AppendLine();
         builder.AppendLine("## 909 Signal IT Contact");
         builder.AppendLine();
         builder.AppendLine("909 Signal IT");

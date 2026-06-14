@@ -78,7 +78,7 @@ The current dashboard can:
 - Show read-only maintenance findings for pending reboot indicators, Windows Update history timestamps, Event Log warning/error counts, and disk health status where available.
 - Show read-only security posture findings for Windows Defender, firewall profiles, BitLocker, local administrator count, and Windows version support where available.
 - Display findings using the required status language: Good, Attention Needed, Critical, and Review Required.
-- Collect technician notes and a recommended service package.
+- Collect technician notes, a technician-reviewed summary, a next-step recommendation, and a recommended service package.
 - Export a branded Markdown report draft with the required disclaimer.
 
 ## Task 2 Read-Only System Profile
@@ -150,6 +150,27 @@ The Security module collects and displays:
 Security collection is read-only. It does not change Defender settings, firewall settings, BitLocker state, user accounts, group policy, services, registry keys, files, or security policy.
 
 Firewall profile status is read through `OpenSubKey(..., writable: false)`. Defender, BitLocker, and local administrator checks use read-only WMI queries. Missing or inaccessible values are shown as `Unavailable`.
+
+## Task 6 Technician Notes and Service Recommendation Workflow
+
+The technician workflow includes editable fields for:
+
+- Client name
+- Client contact
+- Device label
+- Technician-reviewed summary
+- Next-step recommendation
+- Technician notes
+- Recommended service package
+
+After a read-only scan, SignalScan seeds safe default recommendation text based on the overall status:
+
+- Good: routine maintenance or monitoring
+- Attention Needed: tune-up or technician review recommended
+- Critical: urgent technician review
+- Review Required: manual technician review needed
+
+The default summary and recommendation are plain text only. They must be reviewed and edited by the technician before export. No AI summary provider, PDF export, cleanup, repair, or system modification workflow is included in Task 6.
 
 The current dashboard does not:
 

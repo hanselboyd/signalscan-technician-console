@@ -67,7 +67,7 @@
             <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16">
               <StackPanel>
                 <TextBlock Text="Actions" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
-                <TextBlock Text="All actions are read-only or report export only." Foreground="#5D6B7F" Margin="0,6,0,12" TextWrapping="Wrap" />
+                <TextBlock Text="All actions are read-only or report export only. Technician summary and recommendation text must be reviewed before export." Foreground="#5D6B7F" Margin="0,6,0,12" TextWrapping="Wrap" />
                 <Button x:Name="RunScanButton" Content="Run Read-Only Scan" Background="{StaticResource SignalBlue}" Foreground="White" Click="RunScanButton_Click" Margin="0,0,0,10" />
                 <Button x:Name="ExportReportButton" Content="Export Report Draft" Click="ExportReportButton_Click" Margin="0,0,0,10" IsEnabled="False" />
                 <TextBlock x:Name="StatusMessageTextBlock" Text="Ready to scan." Foreground="#5D6B7F" TextWrapping="Wrap" />
@@ -308,6 +308,17 @@
                     <DataGridTextColumn Header="Details" Binding="{Binding Details}" Width="*" />
                   </DataGrid.Columns>
                 </DataGrid>
+              </StackPanel>
+            </Border>
+
+            <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+              <StackPanel>
+                <TextBlock Text="Technician Review and Recommendations" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                <TextBlock Text="Review and edit this plain-English text before exporting a client report draft." Foreground="#5D6B7F" Margin="0,6,0,10" TextWrapping="Wrap" />
+                <TextBlock Text="Technician-reviewed summary" />
+                <TextBox x:Name="TechnicianReviewedSummaryTextBox" AcceptsReturn="True" MinHeight="90" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+                <TextBlock Text="Next-step recommendation" Margin="0,10,0,0" />
+                <TextBox x:Name="NextStepRecommendationTextBox" AcceptsReturn="True" MinHeight="80" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
               </StackPanel>
             </Border>
 

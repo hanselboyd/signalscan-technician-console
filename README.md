@@ -172,6 +172,20 @@ After a read-only scan, SignalScan seeds safe default recommendation text based 
 
 The default summary and recommendation are plain text only. They must be reviewed and edited by the technician before export. No AI summary provider, PDF export, cleanup, repair, or system modification workflow is included in Task 6.
 
+## Task 7 Offline AI Summary Interface
+
+SignalScan includes an AI summary provider interface, `IAiSummaryProvider`, so future summary providers can be added behind a clear boundary.
+
+Task 7 uses `OfflineAiSummaryProvider`, a deterministic mock provider that:
+
+- Runs locally only
+- Uses the existing in-memory `ScanResult`
+- Generates draft plain-English summary and next-step text
+- Populates editable technician review fields only
+- Requires technician review before export
+
+The offline provider does not use API keys, network calls, cloud sync, telemetry, or external AI services. It does not send diagnostic data anywhere. It does not auto-export, auto-finalize, repair, clean up, delete files, write registry keys, modify services, change drivers, change Defender/firewall/BitLocker settings, manage users, change Windows Update, or modify startup items.
+
 The current dashboard does not:
 
 - Install updates.

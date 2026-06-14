@@ -11,6 +11,7 @@ public partial class MainWindow : Window
 {
     private readonly ReadOnlyDiagnosticCollector _collector = new();
     private readonly MarkdownReportExporter _reportExporter = new();
+    private readonly IAiSummaryProvider _aiSummaryProvider = new OfflineAiSummaryProvider();
     private readonly ObservableCollection<FindingRow> _findingRows = new();
     private readonly ObservableCollection<FindingRow> _performanceFindingRows = new();
     private readonly ObservableCollection<FindingRow> _maintenanceFindingRows = new();
@@ -32,6 +33,7 @@ public partial class MainWindow : Window
     {
         RunScanButton.IsEnabled = false;
         ExportReportButton.IsEnabled = false;
+        GenerateOfflineSummaryButton.IsEnabled = false;
         StatusMessageTextBlock.Text = "Collecting read-only diagnostics...";
 
         try
@@ -40,6 +42,7 @@ public partial class MainWindow : Window
             RenderScan(_lastScanResult);
             ApplyDefaultRecommendationText(_lastScanResult);
             ExportReportButton.IsEnabled = true;
+            GenerateOfflineSummaryButton.IsEnabled = true;
             StatusMessageTextBlock.Text = "Read-only scan complete. Review findings before exporting a report draft.";
         }
         catch (Exception ex)
@@ -56,6 +59,19 @@ public partial class MainWindow : Window
         {
             RunScanButton.IsEnabled = true;
         }
+    }
+
+    private void GenerateOfflineSummaryButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_lastScanResult is null)
+        {
+            return;
+        }
+
+        var draft = _aiSummaryProvider.GenerateDraft(_lastScanResult);
+        TechnicianReviewedSummaryTextBox.Text = draft.TechnicianReviewedSummary;
+        NextStepRecommendationTextBox.Text = draft.NextStepRecommendation;
+        StatusMessageTextBlock.Text = "Offline draft summary generated. Review and edit before exporting a report draft.";
     }
 
     private async void ExportReportButton_Click(object sender, RoutedEventArgs e)

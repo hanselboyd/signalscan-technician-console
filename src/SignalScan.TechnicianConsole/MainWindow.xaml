@@ -314,7 +314,8 @@
             <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
               <StackPanel>
                 <TextBlock Text="Technician Review and Recommendations" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
-                <TextBlock Text="Review and edit this plain-English text before exporting a client report draft." Foreground="#5D6B7F" Margin="0,6,0,10" TextWrapping="Wrap" />
+                <TextBlock Text="Offline AI draft text is generated locally from the current scan. The technician decides what to keep and must review all text before export." Foreground="#5D6B7F" Margin="0,6,0,10" TextWrapping="Wrap" />
+                <Button x:Name="GenerateOfflineSummaryButton" Content="Generate Offline Draft Summary" Click="GenerateOfflineSummaryButton_Click" IsEnabled="False" Margin="0,0,0,10" />
                 <TextBlock Text="Technician-reviewed summary" />
                 <TextBox x:Name="TechnicianReviewedSummaryTextBox" AcceptsReturn="True" MinHeight="90" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
                 <TextBlock Text="Next-step recommendation" Margin="0,10,0,0" />

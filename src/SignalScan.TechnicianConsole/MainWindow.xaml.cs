@@ -12,12 +12,14 @@ public partial class MainWindow : Window
     private readonly ReadOnlyDiagnosticCollector _collector = new();
     private readonly MarkdownReportExporter _reportExporter = new();
     private readonly ObservableCollection<FindingRow> _findingRows = new();
+    private readonly ObservableCollection<DriveRow> _driveRows = new();
     private ScanResult? _lastScanResult;
 
     public MainWindow()
     {
         InitializeComponent();
         FindingsDataGrid.ItemsSource = _findingRows;
+        FixedDrivesDataGrid.ItemsSource = _driveRows;
     }
 
     private async void RunScanButton_Click(object sender, RoutedEventArgs e)
@@ -94,13 +96,25 @@ public partial class MainWindow : Window
         OverallStatusTextBlock.Text = HealthStatusFormatter.Format(scanResult.OverallStatus);
         SystemSummaryTextBlock.Text =
             $"Computer: {profile.ComputerName}\n" +
-            $"Windows: {profile.WindowsVersion} build {profile.WindowsBuild}\n" +
+            $"Windows edition: {profile.WindowsEdition}\n" +
+            $"Windows version/build: {profile.WindowsDisplayVersion} / {profile.WindowsBuild}\n" +
             $"CPU: {profile.CpuModel}\n" +
             $"RAM: {profile.Ram}\n" +
-            $"Storage: {profile.StorageSummary}\n" +
             $"Manufacturer/Model: {profile.Manufacturer} {profile.Model}\n" +
             $"BIOS/Firmware: {profile.BiosVersion}\n" +
-            $"Uptime: {profile.Uptime}";
+            $"Uptime: {profile.Uptime}\n" +
+            $"Current user: {profile.CurrentUser}";
+
+        _driveRows.Clear();
+        foreach (var drive in profile.FixedDrives)
+        {
+            _driveRows.Add(new DriveRow(
+                drive.Name,
+                drive.Format,
+                drive.Capacity,
+                drive.FreeSpace,
+                drive.FreePercent));
+        }
 
         _findingRows.Clear();
         foreach (var finding in scanResult.Findings)
@@ -126,4 +140,6 @@ public partial class MainWindow : Window
     }
 
     private sealed record FindingRow(string Category, string Name, string Status, string Details);
+
+    private sealed record DriveRow(string Name, string Format, string Capacity, string FreeSpace, string FreePercent);
 }

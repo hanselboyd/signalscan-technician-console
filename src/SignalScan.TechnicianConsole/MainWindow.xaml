@@ -119,6 +119,27 @@
 
             <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
               <StackPanel>
+                <TextBlock Text="Fixed-Drive Storage" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                <DataGrid x:Name="FixedDrivesDataGrid"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="Column"
+                          CanUserAddRows="False"
+                          IsReadOnly="True"
+                          Margin="0,12,0,0"
+                          MinHeight="120">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="Drive" Binding="{Binding Name}" Width="120" />
+                    <DataGridTextColumn Header="Format" Binding="{Binding Format}" Width="120" />
+                    <DataGridTextColumn Header="Capacity" Binding="{Binding Capacity}" Width="160" />
+                    <DataGridTextColumn Header="Free Space" Binding="{Binding FreeSpace}" Width="160" />
+                    <DataGridTextColumn Header="Free %" Binding="{Binding FreePercent}" Width="*" />
+                  </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
+            </Border>
+
+            <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+              <StackPanel>
                 <TextBlock Text="Findings" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
                 <DataGrid x:Name="FindingsDataGrid"
                           AutoGenerateColumns="False"

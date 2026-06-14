@@ -35,14 +35,24 @@ public sealed class MarkdownReportExporter
         builder.AppendLine("## System Profile");
         builder.AppendLine();
         builder.AppendLine($"- Computer Name: {profile.ComputerName}");
-        builder.AppendLine($"- Windows Version: {profile.WindowsVersion}");
+        builder.AppendLine($"- Windows Edition: {profile.WindowsEdition}");
+        builder.AppendLine($"- Windows Version: {profile.WindowsDisplayVersion}");
         builder.AppendLine($"- Windows Build: {profile.WindowsBuild}");
         builder.AppendLine($"- CPU: {profile.CpuModel}");
         builder.AppendLine($"- RAM: {profile.Ram}");
-        builder.AppendLine($"- Storage: {profile.StorageSummary}");
         builder.AppendLine($"- Manufacturer/Model: {profile.Manufacturer} {profile.Model}".TrimEnd());
         builder.AppendLine($"- BIOS/Firmware: {profile.BiosVersion}");
         builder.AppendLine($"- Uptime: {profile.Uptime}");
+        builder.AppendLine($"- Current User: {profile.CurrentUser}");
+        builder.AppendLine();
+        builder.AppendLine("### Fixed-Drive Storage");
+        builder.AppendLine();
+        builder.AppendLine("| Drive | Format | Capacity | Free Space | Free % |");
+        builder.AppendLine("|---|---|---:|---:|---:|");
+        foreach (var drive in profile.FixedDrives)
+        {
+            builder.AppendLine($"| {EscapeTable(drive.Name)} | {EscapeTable(drive.Format)} | {EscapeTable(drive.Capacity)} | {EscapeTable(drive.FreeSpace)} | {EscapeTable(drive.FreePercent)} |");
+        }
         builder.AppendLine();
 
         AppendFindings(builder, "Performance Findings", scanResult, "Performance");

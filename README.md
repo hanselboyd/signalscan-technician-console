@@ -73,10 +73,30 @@ The current dashboard can:
 
 - Display SignalScan by 909 Signal IT branding.
 - Run a read-only diagnostic scan.
-- Show computer name, Windows version/build, CPU model, RAM, storage summary, manufacturer/model, BIOS version, uptime, current user, and visible process count.
+- Show computer name, Windows edition/version/build, CPU model, RAM, fixed-drive storage, manufacturer/model, BIOS version, uptime, current user, and visible process count.
 - Display findings using the required status language: Good, Attention Needed, Critical, and Review Required.
 - Collect technician notes and a recommended service package.
 - Export a branded Markdown report draft with the required disclaimer.
+
+## Task 2 Read-Only System Profile
+
+The System Profile module collects and displays:
+
+- Computer name
+- Windows edition
+- Windows display version
+- Windows build number and update build revision where available
+- CPU model
+- RAM amount
+- Fixed-drive storage capacity, free space, and free percentage
+- Device manufacturer and model where available
+- BIOS/firmware version where available
+- Current uptime
+- Current user
+
+System profile collection is read-only. It uses safe environment/runtime APIs, fixed-drive enumeration, a read-only memory status API, and read-only registry access with `OpenSubKey(..., writable: false)`. Missing values are normalized to `Unavailable`.
+
+Lightweight helper methods live in `DiagnosticValueFormatter` for unavailable-value normalization, byte formatting, free-space percentage formatting, and uptime formatting.
 
 The current dashboard does not:
 
@@ -96,6 +116,8 @@ Requirements:
 
 - Windows 10/11.
 - .NET 8 SDK or newer with Windows Desktop workload support.
+
+Known local environment blocker: the current development machine has .NET runtimes installed but no .NET SDK. Running `dotnet build .\SignalScan.TechnicianConsole.sln` locally reports `No .NET SDKs were found.` Install the .NET 8 SDK or newer to build and run the app.
 
 Build:
 

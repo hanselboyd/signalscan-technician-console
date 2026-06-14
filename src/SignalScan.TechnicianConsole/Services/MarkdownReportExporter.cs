@@ -55,6 +55,7 @@ public sealed class MarkdownReportExporter
         }
         builder.AppendLine();
 
+        AppendPerformanceSnapshot(builder, scanResult.PerformanceSnapshot);
         AppendFindings(builder, "Performance Findings", scanResult, "Performance");
         AppendFindings(builder, "Maintenance Findings", scanResult, "Maintenance");
         AppendFindings(builder, "Security Posture", scanResult, "Security");
@@ -104,6 +105,20 @@ public sealed class MarkdownReportExporter
             }
         }
 
+        builder.AppendLine();
+    }
+
+    private static void AppendPerformanceSnapshot(StringBuilder builder, PerformanceSnapshot snapshot)
+    {
+        builder.AppendLine("## Performance Snapshot");
+        builder.AppendLine();
+        builder.AppendLine($"- CPU Usage: {snapshot.CpuUsage}");
+        builder.AppendLine($"- RAM Usage: {snapshot.RamUsage}");
+        builder.AppendLine($"- RAM Available: {snapshot.RamAvailable}");
+        builder.AppendLine($"- Disk Free Evaluation: {snapshot.DiskFreeEvaluation}");
+        builder.AppendLine($"- Startup Entries: {snapshot.StartupAppCount}");
+        builder.AppendLine($"- Visible Running Processes: {snapshot.ProcessCount}");
+        builder.AppendLine($"- Uptime Indicator: {snapshot.UptimeIndicator}");
         builder.AppendLine();
     }
 

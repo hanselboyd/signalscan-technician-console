@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using SignalScan.TechnicianConsole.Models;
 
 namespace SignalScan.TechnicianConsole.Services;
@@ -6,24 +5,27 @@ namespace SignalScan.TechnicianConsole.Services;
 public sealed class ReadOnlyDiagnosticCollector
 {
     private readonly SystemProfileCollector _systemProfileCollector = new();
+    private readonly PerformanceCollector _performanceCollector = new();
 
     public Task<ScanResult> CollectAsync()
     {
         return Task.Run(() =>
         {
             var profile = _systemProfileCollector.Collect();
-            var findings = CollectFindings(profile);
+            var performance = _performanceCollector.Collect(profile);
+            var findings = CollectFindings(profile, performance.Findings);
             return new ScanResult
             {
                 ScanTimestamp = DateTimeOffset.Now,
                 SystemProfile = profile,
+                PerformanceSnapshot = performance.Snapshot,
                 Findings = findings,
                 OverallStatus = CalculateOverallStatus(findings)
             };
         });
     }
 
-    private static IReadOnlyList<DiagnosticFinding> CollectFindings(SystemProfile profile)
+    private static IReadOnlyList<DiagnosticFinding> CollectFindings(SystemProfile profile, IReadOnlyList<DiagnosticFinding> performanceFindings)
     {
         var findings = new List<DiagnosticFinding>
         {
@@ -34,19 +36,11 @@ public sealed class ReadOnlyDiagnosticCollector
             new("System Profile", "Fixed-drive storage", DiagnosticValueFormatter.IsUnavailable(profile.StorageSummary) ? HealthStatus.ReviewRequired : HealthStatus.Good, profile.StorageSummary),
             new("System Profile", "Manufacturer and model", DiagnosticValueFormatter.IsUnavailable(profile.Manufacturer) && DiagnosticValueFormatter.IsUnavailable(profile.Model) ? HealthStatus.ReviewRequired : HealthStatus.Good, $"{profile.Manufacturer} {profile.Model}".Trim()),
             new("System Profile", "BIOS/firmware version", DiagnosticValueFormatter.IsUnavailable(profile.BiosVersion) ? HealthStatus.ReviewRequired : HealthStatus.Good, profile.BiosVersion),
-            new("Performance", "Running process count", HealthStatus.Good, $"{SafeProcessCount()} processes were visible to the current user."),
             new("Maintenance", "Maintenance checks", HealthStatus.ReviewRequired, "Detailed update, event log, and disk health checks are planned for later tasks. No maintenance actions were performed."),
             new("Security", "Security posture checks", HealthStatus.ReviewRequired, "Defender, firewall, BitLocker, and account checks are planned for later tasks. No security settings were changed.")
         };
 
-        if (profile.Uptime.Contains("days", StringComparison.OrdinalIgnoreCase))
-        {
-            findings.Add(new("Performance", "Uptime", HealthStatus.AttentionNeeded, $"Current uptime is {profile.Uptime}. A technician may recommend a restart if the client reports slowness or pending updates."));
-        }
-        else
-        {
-            findings.Add(new("Performance", "Uptime", HealthStatus.Good, $"Current uptime is {profile.Uptime}."));
-        }
+        findings.AddRange(performanceFindings);
 
         return findings;
     }
@@ -57,17 +51,5 @@ public sealed class ReadOnlyDiagnosticCollector
         if (findings.Any(f => f.Status == HealthStatus.AttentionNeeded)) return HealthStatus.AttentionNeeded;
         if (findings.Any(f => f.Status == HealthStatus.ReviewRequired)) return HealthStatus.ReviewRequired;
         return HealthStatus.Good;
-    }
-
-    private static int SafeProcessCount()
-    {
-        try
-        {
-            return Process.GetProcesses().Length;
-        }
-        catch
-        {
-            return 0;
-        }
     }
 }

@@ -74,6 +74,7 @@ The current dashboard can:
 - Display SignalScan by 909 Signal IT branding.
 - Run a read-only diagnostic scan.
 - Show computer name, Windows edition/version/build, CPU model, RAM, fixed-drive storage, manufacturer/model, BIOS version, uptime, current user, and visible process count.
+- Show read-only performance findings for CPU, RAM, disk free percentage, startup entry count, visible process count, and uptime.
 - Display findings using the required status language: Good, Attention Needed, Critical, and Review Required.
 - Collect technician notes and a recommended service package.
 - Export a branded Markdown report draft with the required disclaimer.
@@ -97,6 +98,28 @@ The System Profile module collects and displays:
 System profile collection is read-only. It uses safe environment/runtime APIs, fixed-drive enumeration, a read-only memory status API, and read-only registry access with `OpenSubKey(..., writable: false)`. Missing values are normalized to `Unavailable`.
 
 Lightweight helper methods live in `DiagnosticValueFormatter` for unavailable-value normalization, byte formatting, free-space percentage formatting, and uptime formatting.
+
+## Task 3 Read-Only Performance Findings
+
+The Performance module collects and displays:
+
+- CPU usage snapshot using read-only Windows system time counters
+- RAM usage snapshot and available RAM using a read-only memory status API
+- Disk free percentage evaluation using the existing fixed-drive System Profile data
+- Startup app count from read-only registry locations
+- Visible running process count
+- Uptime/reboot attention indicator
+
+Performance collection is read-only. It does not stop processes, modify startup items, disable services, write to registry keys, delete files, run cleanup, or perform repairs.
+
+Startup entry counting reads these locations only:
+
+- `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`
+- `HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce`
+- `HKLM\Software\Microsoft\Windows\CurrentVersion\Run`
+- `HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce`
+
+Registry access remains read-only through `OpenSubKey(..., writable: false)`. Missing values are shown as `Unavailable`. Performance status thresholds are implemented in `PerformanceFindingEvaluator` so they can be unit tested separately later.
 
 The current dashboard does not:
 
@@ -139,4 +162,4 @@ dotnet publish .\src\SignalScan.TechnicianConsole\SignalScan.TechnicianConsole.c
 
 ## Development Safety Confirmation
 
-SignalScan v1 is read-only. Diagnostic collection uses safe inspection APIs and read-only registry access only. Report export writes only the technician-selected report file. No repair, cleanup, deletion, registry write, driver change, service modification, firewall modification, Defender modification, malware removal, remote execution, or background monitoring feature exists in this initial project.
+SignalScan v1 is read-only. Diagnostic collection uses safe inspection APIs and read-only registry access only. Report export writes only the technician-selected report file. No repair, cleanup, deletion, registry write, startup item modification, process stopping, driver change, service modification, firewall modification, Defender modification, malware removal, remote execution, or background monitoring feature exists in this initial project.

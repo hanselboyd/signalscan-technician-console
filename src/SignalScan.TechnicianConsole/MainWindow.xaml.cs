@@ -12,6 +12,7 @@ public partial class MainWindow : Window
     private readonly ReadOnlyDiagnosticCollector _collector = new();
     private readonly MarkdownReportExporter _reportExporter = new();
     private readonly ObservableCollection<FindingRow> _findingRows = new();
+    private readonly ObservableCollection<FindingRow> _performanceFindingRows = new();
     private readonly ObservableCollection<DriveRow> _driveRows = new();
     private ScanResult? _lastScanResult;
 
@@ -19,6 +20,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         FindingsDataGrid.ItemsSource = _findingRows;
+        PerformanceFindingsDataGrid.ItemsSource = _performanceFindingRows;
         FixedDrivesDataGrid.ItemsSource = _driveRows;
     }
 
@@ -94,6 +96,13 @@ public partial class MainWindow : Window
         var profile = scanResult.SystemProfile;
         ScanTimestampTextBlock.Text = $"Scan date/time: {scanResult.ScanTimestamp.LocalDateTime:f}";
         OverallStatusTextBlock.Text = HealthStatusFormatter.Format(scanResult.OverallStatus);
+        CpuUsageTextBlock.Text = scanResult.PerformanceSnapshot.CpuUsage;
+        RamUsageTextBlock.Text = scanResult.PerformanceSnapshot.RamUsage;
+        RamAvailableTextBlock.Text = scanResult.PerformanceSnapshot.RamAvailable;
+        StartupAppCountTextBlock.Text = scanResult.PerformanceSnapshot.StartupAppCount;
+        ProcessCountTextBlock.Text = scanResult.PerformanceSnapshot.ProcessCount;
+        UptimeIndicatorTextBlock.Text = scanResult.PerformanceSnapshot.UptimeIndicator;
+        DiskFreeEvaluationTextBlock.Text = scanResult.PerformanceSnapshot.DiskFreeEvaluation;
         SystemSummaryTextBlock.Text =
             $"Computer: {profile.ComputerName}\n" +
             $"Windows edition: {profile.WindowsEdition}\n" +
@@ -117,13 +126,19 @@ public partial class MainWindow : Window
         }
 
         _findingRows.Clear();
+        _performanceFindingRows.Clear();
         foreach (var finding in scanResult.Findings)
         {
-            _findingRows.Add(new FindingRow(
+            var row = new FindingRow(
                 finding.Category,
                 finding.Name,
                 HealthStatusFormatter.Format(finding.Status),
-                finding.Details));
+                finding.Details);
+            _findingRows.Add(row);
+            if (finding.Category == "Performance")
+            {
+                _performanceFindingRows.Add(row);
+            }
         }
     }
 

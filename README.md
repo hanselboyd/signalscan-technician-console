@@ -248,6 +248,15 @@ The current dashboard does not:
 
 Deeper maintenance/security checks are intentionally left for later tasks in `CODEX_TASKS.md`.
 
+## Demo Kit
+
+The SignalScan demo kit contains sales and demo support materials for presenting v1.0.0 without changing app behavior:
+
+- [Demo kit overview](docs/demo-kit/README.md)
+- [PC Health Check service offer](docs/demo-kit/PC_HEALTH_CHECK_SERVICE_OFFER.md)
+- [Prospect outreach scripts](docs/demo-kit/PROSPECT_OUTREACH_SCRIPTS.md)
+- [Demo checklist](docs/demo-kit/DEMO_CHECKLIST.md)
+
 ## Build and Run
 
 Requirements:

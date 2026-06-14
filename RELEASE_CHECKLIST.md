@@ -91,3 +91,13 @@ Use this checklist before treating SignalScan Technician Console v1.0.0 as a tec
 - [ ] Confirm checks that require unavailable permissions fail gracefully.
 - [ ] Confirm technician understands offline draft text is not a final diagnosis.
 - [ ] Confirm technician understands SignalScan v1.0.0 is read-only and report-focused.
+
+## Demo Kit Readiness
+
+- [ ] Demo kit docs exist.
+- [ ] Sample report guidance reviewed.
+- [ ] Outreach scripts reviewed.
+- [ ] Service offer reviewed.
+- [ ] No real client data committed.
+- [ ] Packaged app tested outside repo.
+- [ ] Demo PDF and Markdown generated locally.

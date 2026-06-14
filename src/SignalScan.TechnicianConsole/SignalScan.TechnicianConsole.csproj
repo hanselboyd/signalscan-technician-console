@@ -14,4 +14,7 @@
     <PackageReference Include="System.Diagnostics.EventLog" Version="8.0.0" />
     <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\signalscan-logo.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

@@ -25,6 +25,8 @@ public sealed class PdfReportExporter
     {
         private const double Margin = 48;
         private const double FooterHeight = 28;
+        private const double LogoWidth = 188;
+        private const double LogoHeight = 57;
 
         private readonly PdfDocument _document = new();
         private readonly XFont _titleFont;
@@ -57,6 +59,7 @@ public sealed class PdfReportExporter
             _document.Info.Author = "909 Signal IT";
             AddPage();
 
+            DrawLogoHeader();
             Title("SignalScan PC Health Report");
             Paragraph("Prepared by 909 Signal IT", _bodyFont, _blueBrush, 12);
             Paragraph("Client-facing report generated from read-only diagnostic information and technician-reviewed notes.", _bodyFont);
@@ -212,6 +215,20 @@ public sealed class PdfReportExporter
             _y += 30;
             _gfx.DrawLine(new XPen(XColor.FromArgb(22, 115, 255), 2), Margin, _y, _page!.Width.Point - Margin, _y);
             _y += 16;
+        }
+
+        private void DrawLogoHeader()
+        {
+            var logoPath = Path.Combine(AppContext.BaseDirectory, "Assets", "signalscan-logo.png");
+            if (!File.Exists(logoPath))
+            {
+                return;
+            }
+
+            EnsureSpace(LogoHeight + 14);
+            using var logo = XImage.FromFile(logoPath);
+            _gfx!.DrawImage(logo, Margin, _y, LogoWidth, LogoHeight);
+            _y += LogoHeight + 14;
         }
 
         private void Section(string text)

@@ -74,6 +74,7 @@ src/
 The current dashboard can:
 
 - Display SignalScan by 909 Signal IT branding.
+- Display the SignalScan logo from the bundled app asset `src/SignalScan.TechnicianConsole/Assets/signalscan-logo.png`.
 - Run a read-only diagnostic scan.
 - Show computer name, Windows edition/version/build, CPU model, RAM, fixed-drive storage, manufacturer/model, BIOS version, uptime, current user, and visible process count.
 - Show read-only performance findings for CPU, RAM, disk free percentage, startup entry count, visible process count, and uptime.
@@ -201,6 +202,10 @@ Both export formats use only the already-collected `ScanResult` and technician-e
 PDF export uses the `PDFsharp` NuGet package. PDFsharp is documented by its project as MIT licensed, which is suitable for commercial use with normal license compliance. The app does not use Microsoft Office automation, Word, Edge, Chrome, browser rendering, printer drivers, or system print services to generate reports.
 
 PDFsharp font resolution is handled by a local Windows font resolver that reads installed fonts from the Windows Fonts directory. SignalScan maps regular text to `arial.ttf` with `segoeui.ttf` as fallback, and bold text to `arialbd.ttf` with `segoeuib.ttf` as fallback. SignalScan does not bundle, download, install, or commit font files; if neither the preferred nor fallback fonts are available, PDF export fails with a clear message and no system changes are made.
+
+PDF reports include the bundled SignalScan logo image. Fonts are still resolved from installed Windows fonts; font files are not bundled or downloaded.
+
+The v1.0.0 app window and PDF report use the bundled SignalScan logo PNG as the primary brand asset. App icon conversion is deferred until a proper square `.ico` logo asset is available.
 
 ## Task 9 Local Scan History
 

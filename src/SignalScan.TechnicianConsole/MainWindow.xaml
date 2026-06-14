@@ -16,9 +16,17 @@
 
     <Border Grid.Row="0" Background="{StaticResource SignalNavy}" Padding="24,18">
       <DockPanel LastChildFill="False">
-        <StackPanel DockPanel.Dock="Left">
-          <TextBlock Text="SignalScan" Foreground="White" FontSize="30" FontWeight="Bold" />
-          <TextBlock Text="by 909 Signal IT - Technician Console v1.0.0" Foreground="#BFD7FF" FontSize="14" />
+        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+          <Border Width="238" Height="72" Background="White" CornerRadius="8" Padding="10" Margin="0,0,16,0">
+            <Image Source="Assets/signalscan-logo.png"
+                   Stretch="Uniform"
+                   RenderOptions.BitmapScalingMode="HighQuality"
+                   AutomationProperties.Name="SignalScan by 909 Signal IT logo" />
+          </Border>
+          <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="Technician Console" Foreground="White" FontSize="26" FontWeight="Bold" />
+            <TextBlock Text="SignalScan by 909 Signal IT - v1.0.0" Foreground="#BFD7FF" FontSize="14" />
+          </StackPanel>
         </StackPanel>
         <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right">
           <TextBlock Text="v1.0.0 release candidate" Foreground="#BFD7FF" FontSize="12" TextAlignment="Right" />

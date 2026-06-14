@@ -54,3 +54,67 @@ signalscan-technician-console/
 ## First Codex Objective
 
 Create the first working SignalScan Technician Console MVP with read-only diagnostics, dashboard display, and report export scaffolding.
+
+## Current Implementation Status
+
+Task 1 has been started with a Windows WPF desktop app:
+
+```text
+src/
+  SignalScan.TechnicianConsole/
+    SignalScan.TechnicianConsole.csproj
+    App.xaml
+    MainWindow.xaml
+    Models/
+    Services/
+```
+
+The current dashboard can:
+
+- Display SignalScan by 909 Signal IT branding.
+- Run a read-only diagnostic scan.
+- Show computer name, Windows version/build, CPU model, RAM, storage summary, manufacturer/model, BIOS version, uptime, current user, and visible process count.
+- Display findings using the required status language: Good, Attention Needed, Critical, and Review Required.
+- Collect technician notes and a recommended service package.
+- Export a branded Markdown report draft with the required disclaimer.
+
+The current dashboard does not:
+
+- Delete files.
+- Modify registry keys.
+- Disable services.
+- Change drivers.
+- Modify firewall, Defender, or antivirus settings.
+- Remove malware.
+- Perform cleanup or automatic repairs.
+
+PDF export, AI summary generation, deeper maintenance/security checks, and local scan history are intentionally left for later tasks in `CODEX_TASKS.md`.
+
+## Build and Run
+
+Requirements:
+
+- Windows 10/11.
+- .NET 8 SDK or newer with Windows Desktop workload support.
+
+Build:
+
+```powershell
+dotnet build .\SignalScan.TechnicianConsole.sln
+```
+
+Run:
+
+```powershell
+dotnet run --project .\src\SignalScan.TechnicianConsole\SignalScan.TechnicianConsole.csproj
+```
+
+Publish a local test build:
+
+```powershell
+dotnet publish .\src\SignalScan.TechnicianConsole\SignalScan.TechnicianConsole.csproj -c Release -r win-x64 --self-contained false
+```
+
+## Development Safety Confirmation
+
+SignalScan v1 is read-only. Diagnostic collection uses safe inspection APIs and read-only registry access only. Report export writes only the technician-selected report file. No repair, cleanup, deletion, registry write, driver change, service modification, firewall modification, Defender modification, malware removal, remote execution, or background monitoring feature exists in this initial project.

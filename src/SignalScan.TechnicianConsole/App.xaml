@@ -1,0 +1,25 @@
+<Application x:Class="SignalScan.TechnicianConsole.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+  <Application.Resources>
+    <SolidColorBrush x:Key="SignalNavy" Color="#071D3C" />
+    <SolidColorBrush x:Key="SignalBlue" Color="#1268F3" />
+    <SolidColorBrush x:Key="SignalGreen" Color="#35B51F" />
+    <SolidColorBrush x:Key="PanelBorder" Color="#DCE6F2" />
+    <Style TargetType="Button">
+      <Setter Property="Padding" Value="14,8" />
+      <Setter Property="Margin" Value="0,0,8,0" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style TargetType="TextBox">
+      <Setter Property="Padding" Value="8" />
+      <Setter Property="Margin" Value="0,4,0,12" />
+    </Style>
+    <Style TargetType="ComboBox">
+      <Setter Property="Padding" Value="8" />
+      <Setter Property="Margin" Value="0,4,0,12" />
+    </Style>
+  </Application.Resources>
+</Application>

@@ -205,6 +205,12 @@ Build:
 dotnet build .\SignalScan.TechnicianConsole.sln
 ```
 
+Continuous integration:
+
+- GitHub Actions runs `.github/workflows/windows-build.yml` on pushes and pull requests to `main`.
+- The workflow uses `windows-latest`, installs the .NET 8 SDK, restores NuGet packages, and builds `SignalScan.TechnicianConsole.sln` in Release configuration.
+- CI validates restore/build readiness. Launching the WPF dashboard, running a read-only scan, and exporting a Markdown report still require a manual smoke test on a Windows desktop session with the .NET SDK installed.
+
 Run:
 
 ```powershell

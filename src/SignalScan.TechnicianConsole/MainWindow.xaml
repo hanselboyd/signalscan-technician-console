@@ -236,6 +236,31 @@
 
             <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
               <StackPanel>
+                <TextBlock Text="Local Scan History" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                <TextBlock x:Name="HistoryStorePathTextBlock" Text="Local history store unavailable." Foreground="#5D6B7F" Margin="0,6,0,0" TextWrapping="Wrap" />
+                <TextBlock Text="History is stored only on this Windows profile and contains minimal scan/report metadata." Foreground="#5D6B7F" Margin="0,4,0,0" TextWrapping="Wrap" />
+                <DataGrid x:Name="ScanHistoryDataGrid"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="Column"
+                          CanUserAddRows="False"
+                          IsReadOnly="True"
+                          Margin="0,12,0,0"
+                          MinHeight="150">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="Scan Date" Binding="{Binding ScanTimestamp}" Width="140" />
+                    <DataGridTextColumn Header="Client" Binding="{Binding ClientName}" Width="140" />
+                    <DataGridTextColumn Header="Device" Binding="{Binding DeviceName}" Width="140" />
+                    <DataGridTextColumn Header="Status" Binding="{Binding OverallStatus}" Width="130" />
+                    <DataGridTextColumn Header="Service" Binding="{Binding RecommendedService}" Width="180" />
+                    <DataGridTextColumn Header="PDF Path" Binding="{Binding ExportedPdfPath}" Width="220" />
+                    <DataGridTextColumn Header="Markdown Path" Binding="{Binding ExportedMarkdownPath}" Width="220" />
+                  </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
+            </Border>
+
+            <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+              <StackPanel>
                 <TextBlock Text="Performance Findings" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
                 <DataGrid x:Name="PerformanceFindingsDataGrid"
                           AutoGenerateColumns="False"

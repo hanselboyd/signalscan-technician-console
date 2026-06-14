@@ -13,12 +13,15 @@ public partial class MainWindow : Window
     private readonly MarkdownReportExporter _reportExporter = new();
     private readonly PdfReportExporter _pdfReportExporter = new();
     private readonly IAiSummaryProvider _aiSummaryProvider = new OfflineAiSummaryProvider();
+    private readonly ScanHistoryStore _historyStore = new();
     private readonly ObservableCollection<FindingRow> _findingRows = new();
     private readonly ObservableCollection<FindingRow> _performanceFindingRows = new();
     private readonly ObservableCollection<FindingRow> _maintenanceFindingRows = new();
     private readonly ObservableCollection<FindingRow> _securityFindingRows = new();
     private readonly ObservableCollection<DriveRow> _driveRows = new();
+    private readonly ObservableCollection<HistoryRow> _historyRows = new();
     private ScanResult? _lastScanResult;
+    private ScanHistoryRecord? _lastHistoryRecord;
 
     public MainWindow()
     {
@@ -28,6 +31,14 @@ public partial class MainWindow : Window
         MaintenanceFindingsDataGrid.ItemsSource = _maintenanceFindingRows;
         SecurityFindingsDataGrid.ItemsSource = _securityFindingRows;
         FixedDrivesDataGrid.ItemsSource = _driveRows;
+        ScanHistoryDataGrid.ItemsSource = _historyRows;
+        HistoryStorePathTextBlock.Text = $"Local history: {_historyStore.StorePath}";
+        Loaded += MainWindow_Loaded;
+    }
+
+    private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        await LoadHistoryAsync();
     }
 
     private async void RunScanButton_Click(object sender, RoutedEventArgs e)
@@ -41,8 +52,10 @@ public partial class MainWindow : Window
         try
         {
             _lastScanResult = await _collector.CollectAsync();
+            _lastHistoryRecord = null;
             RenderScan(_lastScanResult);
             ApplyDefaultRecommendationText(_lastScanResult);
+            await SaveCurrentHistoryRecordAsync();
             ExportPdfReportButton.IsEnabled = true;
             ExportMarkdownDraftButton.IsEnabled = true;
             GenerateOfflineSummaryButton.IsEnabled = true;
@@ -101,6 +114,7 @@ public partial class MainWindow : Window
         try
         {
             await _pdfReportExporter.ExportAsync(dialog.FileName, _lastScanResult, BuildReportContext());
+            await SaveCurrentHistoryRecordAsync(pdfPath: dialog.FileName);
             StatusMessageTextBlock.Text = $"PDF report exported: {dialog.FileName}";
         }
         catch (Exception ex)
@@ -139,6 +153,7 @@ public partial class MainWindow : Window
         try
         {
             await _reportExporter.ExportAsync(dialog.FileName, _lastScanResult, BuildReportContext());
+            await SaveCurrentHistoryRecordAsync(markdownPath: dialog.FileName);
             StatusMessageTextBlock.Text = $"Markdown draft exported: {dialog.FileName}";
         }
         catch (Exception ex)
@@ -239,6 +254,53 @@ public partial class MainWindow : Window
             selectedService);
     }
 
+    private async Task SaveCurrentHistoryRecordAsync(string? pdfPath = null, string? markdownPath = null)
+    {
+        try
+        {
+            if (_lastScanResult is null)
+            {
+                return;
+            }
+
+            var context = BuildReportContext();
+            var record = new ScanHistoryRecord(
+                _lastHistoryRecord?.Id ?? Guid.NewGuid().ToString("N"),
+                _lastScanResult.ScanTimestamp,
+                ValueOrBlank(context.ClientName),
+                _lastScanResult.SystemProfile.ComputerName,
+                HealthStatusFormatter.Format(_lastScanResult.OverallStatus),
+                ValueOrBlank(context.RecommendedService),
+                CleanOptionalPath(pdfPath ?? _lastHistoryRecord?.ExportedPdfPath),
+                CleanOptionalPath(markdownPath ?? _lastHistoryRecord?.ExportedMarkdownPath));
+
+            _lastHistoryRecord = record;
+            await _historyStore.SaveOrUpdateAsync(record);
+            await LoadHistoryAsync();
+        }
+        catch (Exception ex)
+        {
+            HistoryStorePathTextBlock.Text = $"Local history unavailable: {ex.Message}";
+        }
+    }
+
+    private async Task LoadHistoryAsync()
+    {
+        _historyRows.Clear();
+        var records = await _historyStore.LoadAsync();
+        foreach (var record in records)
+        {
+            _historyRows.Add(new HistoryRow(
+                record.ScanTimestamp.LocalDateTime.ToString("g"),
+                record.ClientName,
+                record.DeviceName,
+                record.OverallStatus,
+                record.RecommendedService,
+                record.ExportedPdfPath,
+                record.ExportedMarkdownPath));
+        }
+    }
+
     private void ApplyDefaultRecommendationText(ScanResult scanResult)
     {
         if (string.IsNullOrWhiteSpace(TechnicianReviewedSummaryTextBox.Text))
@@ -267,7 +329,22 @@ public partial class MainWindow : Window
             _ => "Manual technician review is needed because one or more checks could not be completed or require interpretation."
         };
 
+    private static string ValueOrBlank(string value) =>
+        string.IsNullOrWhiteSpace(value) ? "Not provided" : value.Trim();
+
+    private static string CleanOptionalPath(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim();
+
     private sealed record FindingRow(string Category, string Name, string Status, string Details);
 
     private sealed record DriveRow(string Name, string Format, string Capacity, string FreeSpace, string FreePercent);
+
+    private sealed record HistoryRow(
+        string ScanTimestamp,
+        string ClientName,
+        string DeviceName,
+        string OverallStatus,
+        string RecommendedService,
+        string ExportedPdfPath,
+        string ExportedMarkdownPath);
 }

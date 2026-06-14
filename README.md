@@ -79,6 +79,7 @@ The current dashboard can:
 - Show read-only security posture findings for Windows Defender, firewall profiles, BitLocker, local administrator count, and Windows version support where available.
 - Display findings using the required status language: Good, Attention Needed, Critical, and Review Required.
 - Collect technician notes, a technician-reviewed summary, a next-step recommendation, and a recommended service package.
+- Show local-only scan history with minimal scan/report metadata.
 - Export a branded client-facing PDF report and a Markdown draft/debug report with the required disclaimer.
 
 ## Task 2 Read-Only System Profile
@@ -197,6 +198,28 @@ Both export formats use only the already-collected `ScanResult` and technician-e
 
 PDF export uses the `PDFsharp` NuGet package. PDFsharp is documented by its project as MIT licensed, which is suitable for commercial use with normal license compliance. The app does not use Microsoft Office automation, Word, Edge, Chrome, browser rendering, printer drivers, or system print services to generate reports.
 
+## Task 9 Local Scan History
+
+SignalScan stores a local-only scan history JSON file at:
+
+```text
+%LOCALAPPDATA%\909 Signal IT\SignalScan\scan-history.json
+```
+
+The history store is used only by this Windows profile on this machine. It does not sync to the cloud, send telemetry, make network calls, or transmit scan data.
+
+History records contain only minimal metadata:
+
+- Scan timestamp
+- Client name
+- Device/computer name
+- Overall status
+- Recommended service package
+- Exported PDF path, if available
+- Exported Markdown path, if available
+
+History does not store passwords, browser history, emails, personal file names, photos, license keys, sensitive personal content, full diagnostic details, technician notes, summaries, or finding explanations. If the history file is missing or unreadable, the dashboard treats history as empty and continues without blocking scans or exports.
+
 The current dashboard does not:
 
 - Install updates.
@@ -213,7 +236,7 @@ The current dashboard does not:
 - Remove malware.
 - Perform cleanup or automatic repairs.
 
-Deeper maintenance/security checks and local scan history are intentionally left for later tasks in `CODEX_TASKS.md`.
+Deeper maintenance/security checks are intentionally left for later tasks in `CODEX_TASKS.md`.
 
 ## Build and Run
 

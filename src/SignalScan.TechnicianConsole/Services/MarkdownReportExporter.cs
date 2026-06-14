@@ -59,6 +59,7 @@ public sealed class MarkdownReportExporter
         AppendFindings(builder, "Performance Findings", scanResult, "Performance");
         AppendMaintenanceSnapshot(builder, scanResult.MaintenanceSnapshot);
         AppendFindings(builder, "Maintenance Findings", scanResult, "Maintenance");
+        AppendSecuritySnapshot(builder, scanResult.SecuritySnapshot);
         AppendFindings(builder, "Security Posture", scanResult, "Security");
         AppendFindings(builder, "System Profile Findings", scanResult, "System Profile");
 
@@ -133,6 +134,18 @@ public sealed class MarkdownReportExporter
         builder.AppendLine($"- Last Successful Windows Update Install: {snapshot.LastSuccessfulWindowsUpdateDate}");
         builder.AppendLine($"- Event Log Summary: {snapshot.EventLogSummary}");
         builder.AppendLine($"- Disk Health Status: {snapshot.DiskHealthStatus}");
+        builder.AppendLine();
+    }
+
+    private static void AppendSecuritySnapshot(StringBuilder builder, SecuritySnapshot snapshot)
+    {
+        builder.AppendLine("## Security Snapshot");
+        builder.AppendLine();
+        builder.AppendLine($"- Windows Defender Status: {snapshot.WindowsDefenderStatus}");
+        builder.AppendLine($"- Firewall Profile Status: {snapshot.FirewallProfileStatus}");
+        builder.AppendLine($"- BitLocker Status: {snapshot.BitLockerStatus}");
+        builder.AppendLine($"- Local Administrator Count: {snapshot.LocalAdministratorCount}");
+        builder.AppendLine($"- Windows Support Status: {snapshot.WindowsSupportStatus}");
         builder.AppendLine();
     }
 

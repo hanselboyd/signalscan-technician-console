@@ -6,6 +6,7 @@ public sealed class ScanResult
     public required SystemProfile SystemProfile { get; init; }
     public required PerformanceSnapshot PerformanceSnapshot { get; init; }
     public required MaintenanceSnapshot MaintenanceSnapshot { get; init; }
+    public required SecuritySnapshot SecuritySnapshot { get; init; }
     public required IReadOnlyList<DiagnosticFinding> Findings { get; init; }
     public HealthStatus OverallStatus { get; init; } = HealthStatus.ReviewRequired;
 }

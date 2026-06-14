@@ -7,6 +7,7 @@ public sealed class ReadOnlyDiagnosticCollector
     private readonly SystemProfileCollector _systemProfileCollector = new();
     private readonly PerformanceCollector _performanceCollector = new();
     private readonly MaintenanceCollector _maintenanceCollector = new();
+    private readonly SecurityCollector _securityCollector = new();
 
     public Task<ScanResult> CollectAsync()
     {
@@ -15,13 +16,15 @@ public sealed class ReadOnlyDiagnosticCollector
             var profile = _systemProfileCollector.Collect();
             var performance = _performanceCollector.Collect(profile);
             var maintenance = _maintenanceCollector.Collect();
-            var findings = CollectFindings(profile, performance.Findings, maintenance.Findings);
+            var security = _securityCollector.Collect(profile);
+            var findings = CollectFindings(profile, performance.Findings, maintenance.Findings, security.Findings);
             return new ScanResult
             {
                 ScanTimestamp = DateTimeOffset.Now,
                 SystemProfile = profile,
                 PerformanceSnapshot = performance.Snapshot,
                 MaintenanceSnapshot = maintenance.Snapshot,
+                SecuritySnapshot = security.Snapshot,
                 Findings = findings,
                 OverallStatus = CalculateOverallStatus(findings)
             };
@@ -31,7 +34,8 @@ public sealed class ReadOnlyDiagnosticCollector
     private static IReadOnlyList<DiagnosticFinding> CollectFindings(
         SystemProfile profile,
         IReadOnlyList<DiagnosticFinding> performanceFindings,
-        IReadOnlyList<DiagnosticFinding> maintenanceFindings)
+        IReadOnlyList<DiagnosticFinding> maintenanceFindings,
+        IReadOnlyList<DiagnosticFinding> securityFindings)
     {
         var findings = new List<DiagnosticFinding>
         {
@@ -41,12 +45,12 @@ public sealed class ReadOnlyDiagnosticCollector
             new("System Profile", "Installed memory", DiagnosticValueFormatter.IsUnavailable(profile.Ram) ? HealthStatus.ReviewRequired : HealthStatus.Good, profile.Ram),
             new("System Profile", "Fixed-drive storage", DiagnosticValueFormatter.IsUnavailable(profile.StorageSummary) ? HealthStatus.ReviewRequired : HealthStatus.Good, profile.StorageSummary),
             new("System Profile", "Manufacturer and model", DiagnosticValueFormatter.IsUnavailable(profile.Manufacturer) && DiagnosticValueFormatter.IsUnavailable(profile.Model) ? HealthStatus.ReviewRequired : HealthStatus.Good, $"{profile.Manufacturer} {profile.Model}".Trim()),
-            new("System Profile", "BIOS/firmware version", DiagnosticValueFormatter.IsUnavailable(profile.BiosVersion) ? HealthStatus.ReviewRequired : HealthStatus.Good, profile.BiosVersion),
-            new("Security", "Security posture checks", HealthStatus.ReviewRequired, "Defender, firewall, BitLocker, and account checks are planned for later tasks. No security settings were changed.")
+            new("System Profile", "BIOS/firmware version", DiagnosticValueFormatter.IsUnavailable(profile.BiosVersion) ? HealthStatus.ReviewRequired : HealthStatus.Good, profile.BiosVersion)
         };
 
         findings.AddRange(performanceFindings);
         findings.AddRange(maintenanceFindings);
+        findings.AddRange(securityFindings);
 
         return findings;
     }

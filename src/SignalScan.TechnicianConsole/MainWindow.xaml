@@ -206,8 +206,56 @@
 
             <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
               <StackPanel>
+                <TextBlock Text="Security Snapshot" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                <UniformGrid Columns="3" Margin="0,12,0,0">
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="Defender" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="DefenderStatusTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="Firewall Profiles" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="FirewallProfileStatusTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="BitLocker" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="BitLockerStatusTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="Local Admins" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="LocalAdministratorCountTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="Windows Support" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="WindowsSupportStatusTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                </UniformGrid>
+                <TextBlock Text="Security checks are read-only. SignalScan does not change Defender, firewall, BitLocker, user accounts, group policy, services, or registry settings." Foreground="#5D6B7F" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+
+            <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+              <StackPanel>
                 <TextBlock Text="Performance Findings" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
                 <DataGrid x:Name="PerformanceFindingsDataGrid"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="Column"
+                          CanUserAddRows="False"
+                          IsReadOnly="True"
+                          Margin="0,12,0,0"
+                          MinHeight="170">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="Finding" Binding="{Binding Name}" Width="220" />
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="150" />
+                    <DataGridTextColumn Header="Details" Binding="{Binding Details}" Width="*" />
+                  </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
+            </Border>
+
+            <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+              <StackPanel>
+                <TextBlock Text="Security Findings" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                <DataGrid x:Name="SecurityFindingsDataGrid"
                           AutoGenerateColumns="False"
                           HeadersVisibility="Column"
                           CanUserAddRows="False"

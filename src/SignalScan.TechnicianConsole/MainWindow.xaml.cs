@@ -14,6 +14,7 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<FindingRow> _findingRows = new();
     private readonly ObservableCollection<FindingRow> _performanceFindingRows = new();
     private readonly ObservableCollection<FindingRow> _maintenanceFindingRows = new();
+    private readonly ObservableCollection<FindingRow> _securityFindingRows = new();
     private readonly ObservableCollection<DriveRow> _driveRows = new();
     private ScanResult? _lastScanResult;
 
@@ -23,6 +24,7 @@ public partial class MainWindow : Window
         FindingsDataGrid.ItemsSource = _findingRows;
         PerformanceFindingsDataGrid.ItemsSource = _performanceFindingRows;
         MaintenanceFindingsDataGrid.ItemsSource = _maintenanceFindingRows;
+        SecurityFindingsDataGrid.ItemsSource = _securityFindingRows;
         FixedDrivesDataGrid.ItemsSource = _driveRows;
     }
 
@@ -111,6 +113,11 @@ public partial class MainWindow : Window
         LastSuccessfulUpdateTextBlock.Text = scanResult.MaintenanceSnapshot.LastSuccessfulWindowsUpdateDate;
         EventLogSummaryTextBlock.Text = scanResult.MaintenanceSnapshot.EventLogSummary;
         DiskHealthStatusTextBlock.Text = scanResult.MaintenanceSnapshot.DiskHealthStatus;
+        DefenderStatusTextBlock.Text = scanResult.SecuritySnapshot.WindowsDefenderStatus;
+        FirewallProfileStatusTextBlock.Text = scanResult.SecuritySnapshot.FirewallProfileStatus;
+        BitLockerStatusTextBlock.Text = scanResult.SecuritySnapshot.BitLockerStatus;
+        LocalAdministratorCountTextBlock.Text = scanResult.SecuritySnapshot.LocalAdministratorCount;
+        WindowsSupportStatusTextBlock.Text = scanResult.SecuritySnapshot.WindowsSupportStatus;
         SystemSummaryTextBlock.Text =
             $"Computer: {profile.ComputerName}\n" +
             $"Windows edition: {profile.WindowsEdition}\n" +
@@ -136,6 +143,7 @@ public partial class MainWindow : Window
         _findingRows.Clear();
         _performanceFindingRows.Clear();
         _maintenanceFindingRows.Clear();
+        _securityFindingRows.Clear();
         foreach (var finding in scanResult.Findings)
         {
             var row = new FindingRow(
@@ -151,6 +159,10 @@ public partial class MainWindow : Window
             else if (finding.Category == "Maintenance")
             {
                 _maintenanceFindingRows.Add(row);
+            }
+            else if (finding.Category == "Security")
+            {
+                _securityFindingRows.Add(row);
             }
         }
     }

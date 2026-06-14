@@ -76,6 +76,7 @@ The current dashboard can:
 - Show computer name, Windows edition/version/build, CPU model, RAM, fixed-drive storage, manufacturer/model, BIOS version, uptime, current user, and visible process count.
 - Show read-only performance findings for CPU, RAM, disk free percentage, startup entry count, visible process count, and uptime.
 - Show read-only maintenance findings for pending reboot indicators, Windows Update history timestamps, Event Log warning/error counts, and disk health status where available.
+- Show read-only security posture findings for Windows Defender, firewall profiles, BitLocker, local administrator count, and Windows version support where available.
 - Display findings using the required status language: Good, Attention Needed, Critical, and Review Required.
 - Collect technician notes and a recommended service package.
 - Export a branded Markdown report draft with the required disclaimer.
@@ -136,6 +137,20 @@ Maintenance collection is read-only. It does not install updates, trigger update
 
 Registry access remains read-only through `OpenSubKey(..., writable: false)`. Event Log access uses read-only event queries. Disk health access uses read-only WMI data. Missing or inaccessible values are shown as `Unavailable`.
 
+## Task 5 Read-Only Security Posture Findings
+
+The Security module collects and displays:
+
+- Windows Defender service, antivirus, real-time protection, network inspection, and signature timestamp where available
+- Firewall profile status for Domain, Private, and Public profiles where available
+- BitLocker protection status by volume where available
+- Local Administrators group member count where available
+- Windows build support/lifecycle attention indicator where available
+
+Security collection is read-only. It does not change Defender settings, firewall settings, BitLocker state, user accounts, group policy, services, registry keys, files, or security policy.
+
+Firewall profile status is read through `OpenSubKey(..., writable: false)`. Defender, BitLocker, and local administrator checks use read-only WMI queries. Missing or inaccessible values are shown as `Unavailable`.
+
 The current dashboard does not:
 
 - Install updates.
@@ -145,6 +160,8 @@ The current dashboard does not:
 - Delete files.
 - Modify registry keys.
 - Disable services.
+- Manage user accounts.
+- Modify group policy.
 - Change drivers.
 - Modify firewall, Defender, or antivirus settings.
 - Remove malware.

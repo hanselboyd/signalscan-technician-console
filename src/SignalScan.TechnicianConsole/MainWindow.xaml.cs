@@ -13,6 +13,7 @@ public partial class MainWindow : Window
     private readonly MarkdownReportExporter _reportExporter = new();
     private readonly ObservableCollection<FindingRow> _findingRows = new();
     private readonly ObservableCollection<FindingRow> _performanceFindingRows = new();
+    private readonly ObservableCollection<FindingRow> _maintenanceFindingRows = new();
     private readonly ObservableCollection<DriveRow> _driveRows = new();
     private ScanResult? _lastScanResult;
 
@@ -21,6 +22,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         FindingsDataGrid.ItemsSource = _findingRows;
         PerformanceFindingsDataGrid.ItemsSource = _performanceFindingRows;
+        MaintenanceFindingsDataGrid.ItemsSource = _maintenanceFindingRows;
         FixedDrivesDataGrid.ItemsSource = _driveRows;
     }
 
@@ -103,6 +105,12 @@ public partial class MainWindow : Window
         ProcessCountTextBlock.Text = scanResult.PerformanceSnapshot.ProcessCount;
         UptimeIndicatorTextBlock.Text = scanResult.PerformanceSnapshot.UptimeIndicator;
         DiskFreeEvaluationTextBlock.Text = scanResult.PerformanceSnapshot.DiskFreeEvaluation;
+        PendingRebootTextBlock.Text = scanResult.MaintenanceSnapshot.PendingReboot;
+        WindowsUpdateStatusTextBlock.Text = scanResult.MaintenanceSnapshot.WindowsUpdateStatus;
+        WindowsUpdateStatusDateTextBlock.Text = scanResult.MaintenanceSnapshot.WindowsUpdateStatusDate;
+        LastSuccessfulUpdateTextBlock.Text = scanResult.MaintenanceSnapshot.LastSuccessfulWindowsUpdateDate;
+        EventLogSummaryTextBlock.Text = scanResult.MaintenanceSnapshot.EventLogSummary;
+        DiskHealthStatusTextBlock.Text = scanResult.MaintenanceSnapshot.DiskHealthStatus;
         SystemSummaryTextBlock.Text =
             $"Computer: {profile.ComputerName}\n" +
             $"Windows edition: {profile.WindowsEdition}\n" +
@@ -127,6 +135,7 @@ public partial class MainWindow : Window
 
         _findingRows.Clear();
         _performanceFindingRows.Clear();
+        _maintenanceFindingRows.Clear();
         foreach (var finding in scanResult.Findings)
         {
             var row = new FindingRow(
@@ -138,6 +147,10 @@ public partial class MainWindow : Window
             if (finding.Category == "Performance")
             {
                 _performanceFindingRows.Add(row);
+            }
+            else if (finding.Category == "Maintenance")
+            {
+                _maintenanceFindingRows.Add(row);
             }
         }
     }

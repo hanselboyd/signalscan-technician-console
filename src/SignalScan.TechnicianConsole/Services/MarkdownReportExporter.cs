@@ -57,6 +57,7 @@ public sealed class MarkdownReportExporter
 
         AppendPerformanceSnapshot(builder, scanResult.PerformanceSnapshot);
         AppendFindings(builder, "Performance Findings", scanResult, "Performance");
+        AppendMaintenanceSnapshot(builder, scanResult.MaintenanceSnapshot);
         AppendFindings(builder, "Maintenance Findings", scanResult, "Maintenance");
         AppendFindings(builder, "Security Posture", scanResult, "Security");
         AppendFindings(builder, "System Profile Findings", scanResult, "System Profile");
@@ -119,6 +120,19 @@ public sealed class MarkdownReportExporter
         builder.AppendLine($"- Startup Entries: {snapshot.StartupAppCount}");
         builder.AppendLine($"- Visible Running Processes: {snapshot.ProcessCount}");
         builder.AppendLine($"- Uptime Indicator: {snapshot.UptimeIndicator}");
+        builder.AppendLine();
+    }
+
+    private static void AppendMaintenanceSnapshot(StringBuilder builder, MaintenanceSnapshot snapshot)
+    {
+        builder.AppendLine("## Maintenance Snapshot");
+        builder.AppendLine();
+        builder.AppendLine($"- Pending Reboot: {snapshot.PendingReboot}");
+        builder.AppendLine($"- Windows Update Status: {snapshot.WindowsUpdateStatus}");
+        builder.AppendLine($"- Windows Update Status Date: {snapshot.WindowsUpdateStatusDate}");
+        builder.AppendLine($"- Last Successful Windows Update Install: {snapshot.LastSuccessfulWindowsUpdateDate}");
+        builder.AppendLine($"- Event Log Summary: {snapshot.EventLogSummary}");
+        builder.AppendLine($"- Disk Health Status: {snapshot.DiskHealthStatus}");
         builder.AppendLine();
     }
 

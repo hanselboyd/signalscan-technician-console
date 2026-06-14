@@ -75,6 +75,7 @@ The current dashboard can:
 - Run a read-only diagnostic scan.
 - Show computer name, Windows edition/version/build, CPU model, RAM, fixed-drive storage, manufacturer/model, BIOS version, uptime, current user, and visible process count.
 - Show read-only performance findings for CPU, RAM, disk free percentage, startup entry count, visible process count, and uptime.
+- Show read-only maintenance findings for pending reboot indicators, Windows Update history timestamps, Event Log warning/error counts, and disk health status where available.
 - Display findings using the required status language: Good, Attention Needed, Critical, and Review Required.
 - Collect technician notes and a recommended service package.
 - Export a branded Markdown report draft with the required disclaimer.
@@ -121,8 +122,26 @@ Startup entry counting reads these locations only:
 
 Registry access remains read-only through `OpenSubKey(..., writable: false)`. Missing values are shown as `Unavailable`. Performance status thresholds are implemented in `PerformanceFindingEvaluator` so they can be unit tested separately later.
 
+## Task 4 Read-Only Maintenance Findings
+
+The Maintenance module collects and displays:
+
+- Pending reboot flag from common read-only Windows registry indicators
+- Windows Update detect/install history status where available
+- Last successful Windows Update install date where available
+- System and Application Event Log warning/error counts for the last 7 days
+- Disk health status from the read-only `Win32_DiskDrive` provider where available
+
+Maintenance collection is read-only. It does not install updates, trigger update scans, repair disks, clear logs, delete files, modify services, write to registry keys, perform cleanup, or perform automatic repairs.
+
+Registry access remains read-only through `OpenSubKey(..., writable: false)`. Event Log access uses read-only event queries. Disk health access uses read-only WMI data. Missing or inaccessible values are shown as `Unavailable`.
+
 The current dashboard does not:
 
+- Install updates.
+- Trigger update scans.
+- Repair disks.
+- Clear Event Logs.
 - Delete files.
 - Modify registry keys.
 - Disable services.

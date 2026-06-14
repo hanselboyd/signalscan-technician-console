@@ -173,8 +173,60 @@
 
             <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
               <StackPanel>
+                <TextBlock Text="Maintenance Snapshot" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                <UniformGrid Columns="3" Margin="0,12,0,0">
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="Pending Reboot" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="PendingRebootTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="Update Status" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="WindowsUpdateStatusTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="Update Status Date" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="WindowsUpdateStatusDateTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="Last Successful Install" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="LastSuccessfulUpdateTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="Event Logs" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="EventLogSummaryTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                  <StackPanel Margin="0,0,12,12">
+                    <TextBlock Text="Disk Health" Foreground="#5D6B7F" />
+                    <TextBlock x:Name="DiskHealthStatusTextBlock" Text="Unavailable" FontSize="18" FontWeight="Bold" />
+                  </StackPanel>
+                </UniformGrid>
+                <TextBlock Text="Maintenance checks are read-only. SignalScan does not install updates, repair disks, clear logs, delete files, or change settings." Foreground="#5D6B7F" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+
+            <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+              <StackPanel>
                 <TextBlock Text="Performance Findings" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
                 <DataGrid x:Name="PerformanceFindingsDataGrid"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="Column"
+                          CanUserAddRows="False"
+                          IsReadOnly="True"
+                          Margin="0,12,0,0"
+                          MinHeight="170">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="Finding" Binding="{Binding Name}" Width="220" />
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="150" />
+                    <DataGridTextColumn Header="Details" Binding="{Binding Details}" Width="*" />
+                  </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
+            </Border>
+
+            <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+              <StackPanel>
+                <TextBlock Text="Maintenance Findings" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                <DataGrid x:Name="MaintenanceFindingsDataGrid"
                           AutoGenerateColumns="False"
                           HeadersVisibility="Column"
                           CanUserAddRows="False"

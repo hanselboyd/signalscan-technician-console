@@ -1,3 +1,4 @@
+using System.IO;
 using PdfSharp;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
@@ -9,6 +10,9 @@ public sealed class PdfReportExporter
 {
     public Task ExportAsync(string path, ScanResult scanResult, ReportContext context)
     {
+        WindowsPdfSharpFontResolver.EnsureConfigured();
+        RunSmokeExport();
+
         return Task.Run(() =>
         {
             using var writer = new PdfReportWriter();
@@ -23,11 +27,11 @@ public sealed class PdfReportExporter
         private const double FooterHeight = 28;
 
         private readonly PdfDocument _document = new();
-        private readonly XFont _titleFont = new("Arial", 22, XFontStyleEx.Bold);
-        private readonly XFont _sectionFont = new("Arial", 15, XFontStyleEx.Bold);
-        private readonly XFont _labelFont = new("Arial", 10, XFontStyleEx.Bold);
-        private readonly XFont _bodyFont = new("Arial", 10, XFontStyleEx.Regular);
-        private readonly XFont _smallFont = new("Arial", 8, XFontStyleEx.Regular);
+        private readonly XFont _titleFont;
+        private readonly XFont _sectionFont;
+        private readonly XFont _labelFont;
+        private readonly XFont _bodyFont;
+        private readonly XFont _smallFont;
         private readonly XBrush _navyBrush = new XSolidBrush(XColor.FromArgb(16, 42, 67));
         private readonly XBrush _blueBrush = new XSolidBrush(XColor.FromArgb(22, 115, 255));
         private readonly XBrush _textBrush = new XSolidBrush(XColor.FromArgb(32, 38, 48));
@@ -36,6 +40,16 @@ public sealed class PdfReportExporter
         private PdfPage? _page;
         private XGraphics? _gfx;
         private double _y;
+
+        public PdfReportWriter()
+        {
+            WindowsPdfSharpFontResolver.EnsureConfigured();
+            _titleFont = new XFont(WindowsPdfSharpFontResolver.FontFamilyName, 22, XFontStyleEx.Bold);
+            _sectionFont = new XFont(WindowsPdfSharpFontResolver.FontFamilyName, 15, XFontStyleEx.Bold);
+            _labelFont = new XFont(WindowsPdfSharpFontResolver.FontFamilyName, 10, XFontStyleEx.Bold);
+            _bodyFont = new XFont(WindowsPdfSharpFontResolver.FontFamilyName, 10, XFontStyleEx.Regular);
+            _smallFont = new XFont(WindowsPdfSharpFontResolver.FontFamilyName, 8, XFontStyleEx.Regular);
+        }
 
         public void Build(ScanResult scanResult, ReportContext context)
         {
@@ -283,5 +297,21 @@ public sealed class PdfReportExporter
 
         private static string ValueOrBlank(string value) =>
             string.IsNullOrWhiteSpace(value) ? "Not provided" : value.Trim();
+    }
+
+    private static void RunSmokeExport()
+    {
+        using var document = new PdfDocument();
+        document.Info.Title = "SignalScan PDF smoke test";
+
+        var page = document.AddPage();
+        page.Size = PageSize.Letter;
+
+        using var gfx = XGraphics.FromPdfPage(page);
+        var font = new XFont(WindowsPdfSharpFontResolver.FontFamilyName, 12, XFontStyleEx.Regular);
+        gfx.DrawString("SignalScan PDF smoke test", font, XBrushes.Black, new XPoint(48, 48));
+
+        using var stream = new MemoryStream();
+        document.Save(stream, false);
     }
 }

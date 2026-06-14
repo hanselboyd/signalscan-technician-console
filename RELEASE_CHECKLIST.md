@@ -23,7 +23,7 @@ Use this checklist before treating SignalScan Technician Console v1.0.0 as a tec
 - [ ] `Generate Offline Draft Summary` populates editable summary and next-step fields.
 - [ ] Offline draft text is clearly marked as technician-reviewed draft text.
 - [ ] Technician can edit client name, contact, device label, notes, summary, next step, and recommended service.
-- [ ] `Export PDF Report` creates a readable branded PDF.
+- [ ] `Export PDF Report` creates a readable branded PDF on the smoke-test machine using installed Windows fonts.
 - [ ] `Export Markdown Draft` creates a readable Markdown report.
 - [ ] Local scan history updates after scan.
 - [ ] Local scan history updates PDF path after PDF export.

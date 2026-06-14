@@ -200,6 +200,8 @@ Both export formats use only the already-collected `ScanResult` and technician-e
 
 PDF export uses the `PDFsharp` NuGet package. PDFsharp is documented by its project as MIT licensed, which is suitable for commercial use with normal license compliance. The app does not use Microsoft Office automation, Word, Edge, Chrome, browser rendering, printer drivers, or system print services to generate reports.
 
+PDFsharp font resolution is handled by a local Windows font resolver that reads installed fonts from the Windows Fonts directory. SignalScan maps regular text to `arial.ttf` with `segoeui.ttf` as fallback, and bold text to `arialbd.ttf` with `segoeuib.ttf` as fallback. SignalScan does not bundle, download, install, or commit font files; if neither the preferred nor fallback fonts are available, PDF export fails with a clear message and no system changes are made.
+
 ## Task 9 Local Scan History
 
 SignalScan stores a local-only scan history JSON file at:

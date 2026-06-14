@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
@@ -119,10 +121,12 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            StatusMessageTextBlock.Text = $"PDF export failed: {ex.Message}";
+            var failureMessage = BuildPdfExportFailureMessage(ex);
+            WritePdfExportFailureDebugFile(failureMessage);
+            StatusMessageTextBlock.Text = $"PDF export failed: {ex}";
             MessageBox.Show(
                 this,
-                "SignalScan could not export the PDF report. No system changes were made.",
+                failureMessage,
                 "SignalScan",
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
@@ -334,6 +338,38 @@ public partial class MainWindow : Window
 
     private static string CleanOptionalPath(string? value) =>
         string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim();
+
+    private static string BuildPdfExportFailureMessage(Exception exception)
+    {
+        var message = new StringBuilder();
+        message.AppendLine("PDF export failed with exception details:");
+        message.AppendLine(exception.ToString());
+        message.AppendLine();
+        message.AppendLine($"Regular font: {WindowsPdfSharpFontResolver.SelectedRegularFontPath ?? "Unavailable"}");
+        message.AppendLine($"Bold font: {WindowsPdfSharpFontResolver.SelectedBoldFontPath ?? "Unavailable"}");
+        message.AppendLine($"PDFsharp resolver initialized: {WindowsPdfSharpFontResolver.IsPdfSharpResolverInitialized}");
+
+        return message.ToString();
+    }
+
+    private static void WritePdfExportFailureDebugFile(string failureMessage)
+    {
+        try
+        {
+            var directory = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "909 Signal IT",
+                "SignalScan");
+            Directory.CreateDirectory(directory);
+
+            var path = Path.Combine(directory, "pdf-export-error.txt");
+            File.WriteAllText(path, failureMessage);
+        }
+        catch
+        {
+            // Preserve the original export failure dialog even if the debug file cannot be written.
+        }
+    }
 
     private sealed record FindingRow(string Category, string Name, string Status, string Details);
 

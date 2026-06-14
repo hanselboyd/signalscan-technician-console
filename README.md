@@ -2,6 +2,8 @@
 
 **SignalScan by 909 Signal IT** is an AI-assisted Windows PC diagnostic and client-reporting tool for residential and small business IT support.
 
+Current release candidate: **v1.0.0**
+
 Internal codename: **Horsepower**
 
 ## Product Positioning
@@ -57,7 +59,7 @@ Create the first working SignalScan Technician Console MVP with read-only diagno
 
 ## Current Implementation Status
 
-Task 1 has been started with a Windows WPF desktop app:
+SignalScan Technician Console v1.0.0 is prepared as a safe technician demo/release candidate with a Windows WPF desktop app:
 
 ```text
 src/
@@ -219,6 +221,12 @@ History records contain only minimal metadata:
 - Exported Markdown path, if available
 
 History does not store passwords, browser history, emails, personal file names, photos, license keys, sensitive personal content, full diagnostic details, technician notes, summaries, or finding explanations. If the history file is missing or unreadable, the dashboard treats history as empty and continues without blocking scans or exports.
+
+## v1.0.0 Release Candidate Notes
+
+SignalScan Technician Console v1.0.0 is intended for internal technician demo and release-candidate testing on Windows 10/11 machines or VMs. Before client use, complete `RELEASE_CHECKLIST.md` and review `PRIVACY_AND_SAFETY.md`.
+
+v1.0.0 includes read-only diagnostics, dashboard findings, offline draft summary text, technician-reviewed recommendations, PDF/Markdown export, and local-only scan history. It does not include real external AI calls, cloud sync, telemetry, analytics, licensing, payments, auto-update, background monitoring, cleanup, repair, or system modification features.
 
 The current dashboard does not:
 

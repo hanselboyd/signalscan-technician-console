@@ -18,9 +18,10 @@
       <DockPanel LastChildFill="False">
         <StackPanel DockPanel.Dock="Left">
           <TextBlock Text="SignalScan" Foreground="White" FontSize="30" FontWeight="Bold" />
-          <TextBlock Text="by 909 Signal IT - Technician Console" Foreground="#BFD7FF" FontSize="14" />
+          <TextBlock Text="by 909 Signal IT - Technician Console v1.0.0" Foreground="#BFD7FF" FontSize="14" />
         </StackPanel>
         <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right">
+          <TextBlock Text="v1.0.0 release candidate" Foreground="#BFD7FF" FontSize="12" TextAlignment="Right" />
           <TextBlock Text="Read-only diagnostic mode" Foreground="#A9F59B" FontWeight="SemiBold" TextAlignment="Right" />
           <TextBlock Text="No repair, cleanup, deletion, or configuration changes" Foreground="White" FontSize="12" TextAlignment="Right" />
         </StackPanel>

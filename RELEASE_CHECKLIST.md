@@ -12,6 +12,8 @@ Use this checklist before treating SignalScan Technician Console v1.0.0 as a tec
 
 ## Manual Smoke Test
 
+- [ ] Zip package opens on the smoke-test machine.
+- [ ] `SignalScan.TechnicianConsole.exe` launches from the unzipped folder.
 - [ ] App launches on a Windows 10 or Windows 11 test machine.
 - [ ] App shows SignalScan / 909 Signal IT branding and v1.0.0 marker.
 - [ ] `Run Read-Only Scan` completes without crashing.
@@ -25,7 +27,10 @@ Use this checklist before treating SignalScan Technician Console v1.0.0 as a tec
 - [ ] Technician can edit client name, contact, device label, notes, summary, next step, and recommended service.
 - [ ] `Export PDF Report` creates a readable branded PDF on the smoke-test machine using installed Windows fonts.
 - [ ] `Export Markdown Draft` creates a readable Markdown report.
+- [ ] PDF export works from the packaged app.
+- [ ] Markdown export works from the packaged app.
 - [ ] Local scan history updates after scan.
+- [ ] Local scan history writes from the packaged app.
 - [ ] Local scan history updates PDF path after PDF export.
 - [ ] Local scan history updates Markdown path after Markdown export.
 - [ ] App still functions if local history file is missing or unreadable.
@@ -46,6 +51,7 @@ Use this checklist before treating SignalScan Technician Console v1.0.0 as a tec
 - [ ] No Windows Update install, scan trigger, or settings-change code exists.
 - [ ] No startup-item modification code exists.
 - [ ] No automatic repair action exists.
+- [ ] Zip package does not perform installer actions or system changes.
 
 ## Privacy Confirmation
 

@@ -1,0 +1,45 @@
+name: Windows Release Package
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  package:
+    name: Build zip release package
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore .\SignalScan.TechnicianConsole.sln
+
+      - name: Publish
+        run: dotnet publish .\src\SignalScan.TechnicianConsole\SignalScan.TechnicianConsole.csproj -c Release -r win-x64 --self-contained false -o .\artifacts\SignalScan-v1.0.0-win-x64
+
+      - name: Copy release notes
+        shell: pwsh
+        run: |
+          Copy-Item .\README.md .\artifacts\SignalScan-v1.0.0-win-x64\
+          Copy-Item .\RELEASE_CHECKLIST.md .\artifacts\SignalScan-v1.0.0-win-x64\
+          Copy-Item .\PRIVACY_AND_SAFETY.md .\artifacts\SignalScan-v1.0.0-win-x64\
+          Copy-Item .\LAUNCH_INSTRUCTIONS.md .\artifacts\SignalScan-v1.0.0-win-x64\
+
+      - name: Create zip
+        shell: pwsh
+        run: Compress-Archive -Path .\artifacts\SignalScan-v1.0.0-win-x64 -DestinationPath .\artifacts\SignalScan-v1.0.0-win-x64.zip -Force
+
+      - name: Upload zip artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SignalScan-v1.0.0-win-x64
+          path: .\artifacts\SignalScan-v1.0.0-win-x64.zip

@@ -267,6 +267,7 @@ Continuous integration:
 
 - GitHub Actions runs `.github/workflows/windows-build.yml` on pushes and pull requests to `main`.
 - The workflow uses `windows-latest`, installs the .NET 8 SDK, restores NuGet packages, and builds `SignalScan.TechnicianConsole.sln` in Release configuration.
+- GitHub Actions also includes `.github/workflows/windows-release-package.yml`, a manual/tag-triggered zip packaging workflow for v1.0.0 release candidates.
 - CI validates restore/build readiness. Launching the WPF dashboard, running a read-only scan, and exporting a Markdown report still require a manual smoke test on a Windows desktop session with the .NET SDK installed.
 
 Run:
@@ -280,6 +281,30 @@ Publish a local test build:
 ```powershell
 dotnet publish .\src\SignalScan.TechnicianConsole\SignalScan.TechnicianConsole.csproj -c Release -r win-x64 --self-contained false
 ```
+
+Create a local v1.0.0 zip release package:
+
+```powershell
+dotnet publish .\src\SignalScan.TechnicianConsole\SignalScan.TechnicianConsole.csproj -c Release -r win-x64 --self-contained false -o .\artifacts\SignalScan-v1.0.0-win-x64
+Copy-Item .\README.md, .\RELEASE_CHECKLIST.md, .\PRIVACY_AND_SAFETY.md, .\LAUNCH_INSTRUCTIONS.md .\artifacts\SignalScan-v1.0.0-win-x64\
+Compress-Archive -Path .\artifacts\SignalScan-v1.0.0-win-x64 -DestinationPath .\artifacts\SignalScan-v1.0.0-win-x64.zip -Force
+```
+
+Run the packaged app:
+
+1. Unzip `SignalScan-v1.0.0-win-x64.zip`.
+2. Open the unzipped folder.
+3. Run `SignalScan.TechnicianConsole.exe`.
+4. Run the app first on a non-client machine or VM and complete `RELEASE_CHECKLIST.md` before client use.
+
+Trigger the GitHub Actions release package workflow:
+
+1. Open the repository's GitHub Actions tab.
+2. Select `Windows Release Package`.
+3. Choose `Run workflow` for a manual package, or push a tag matching `v*`, such as `v1.0.0`.
+4. Download the `SignalScan-v1.0.0-win-x64` artifact from the completed workflow run.
+
+The first v1.0.0 package is zip-only, not an installer. It does not install services, write registry keys, add startup items, configure auto-update, or change Windows system settings.
 
 ## Development Safety Confirmation
 

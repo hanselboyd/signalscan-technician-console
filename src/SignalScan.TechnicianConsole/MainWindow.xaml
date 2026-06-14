@@ -254,25 +254,6 @@
 
             <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
               <StackPanel>
-                <TextBlock Text="Security Findings" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
-                <DataGrid x:Name="SecurityFindingsDataGrid"
-                          AutoGenerateColumns="False"
-                          HeadersVisibility="Column"
-                          CanUserAddRows="False"
-                          IsReadOnly="True"
-                          Margin="0,12,0,0"
-                          MinHeight="170">
-                  <DataGrid.Columns>
-                    <DataGridTextColumn Header="Finding" Binding="{Binding Name}" Width="220" />
-                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="150" />
-                    <DataGridTextColumn Header="Details" Binding="{Binding Details}" Width="*" />
-                  </DataGrid.Columns>
-                </DataGrid>
-              </StackPanel>
-            </Border>
-
-            <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
-              <StackPanel>
                 <TextBlock Text="Maintenance Findings" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
                 <DataGrid x:Name="MaintenanceFindingsDataGrid"
                           AutoGenerateColumns="False"
@@ -292,7 +273,27 @@
 
             <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
               <StackPanel>
-                <TextBlock Text="Findings" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                <TextBlock Text="Security Findings" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                <DataGrid x:Name="SecurityFindingsDataGrid"
+                          AutoGenerateColumns="False"
+                          HeadersVisibility="Column"
+                          CanUserAddRows="False"
+                          IsReadOnly="True"
+                          Margin="0,12,0,0"
+                          MinHeight="170">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="Finding" Binding="{Binding Name}" Width="220" />
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="150" />
+                    <DataGridTextColumn Header="Details" Binding="{Binding Details}" Width="*" />
+                  </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
+            </Border>
+
+            <Border Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+              <StackPanel>
+                <TextBlock Text="All Findings Summary" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                <TextBlock Text="Combined read-only findings across System Profile, Performance, Maintenance, and Security." Foreground="#5D6B7F" Margin="0,6,0,0" TextWrapping="Wrap" />
                 <DataGrid x:Name="FindingsDataGrid"
                           AutoGenerateColumns="False"
                           HeadersVisibility="Column"

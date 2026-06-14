@@ -60,7 +60,7 @@ public sealed class MarkdownReportExporter
         AppendMaintenanceSnapshot(builder, scanResult.MaintenanceSnapshot);
         AppendFindings(builder, "Maintenance Findings", scanResult, "Maintenance");
         AppendSecuritySnapshot(builder, scanResult.SecuritySnapshot);
-        AppendFindings(builder, "Security Posture", scanResult, "Security");
+        AppendFindings(builder, "Security Findings", scanResult, "Security");
         AppendFindings(builder, "System Profile Findings", scanResult, "System Profile");
 
         builder.AppendLine("## Technician Notes");

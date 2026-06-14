@@ -145,7 +145,7 @@ The Security module collects and displays:
 - Firewall profile status for Domain, Private, and Public profiles where available
 - BitLocker protection status by volume where available
 - Local Administrators group member count where available
-- Windows build support/lifecycle attention indicator where available
+- Windows build support/lifecycle attention indicator where available, including build values reported with a dotted update build revision such as `19045.5247`
 
 Security collection is read-only. It does not change Defender settings, firewall settings, BitLocker state, user accounts, group policy, services, registry keys, files, or security policy.
 

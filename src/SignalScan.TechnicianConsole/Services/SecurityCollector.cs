@@ -193,7 +193,7 @@ public sealed class SecurityCollector
 
     private static SecurityCheckResult GetWindowsSupportStatus(SystemProfile profile)
     {
-        if (!int.TryParse(profile.WindowsBuild, out var build))
+        if (!TryParseBaseWindowsBuild(profile.WindowsBuild, out var build))
         {
             return new SecurityCheckResult(
                 DiagnosticValueFormatter.Unavailable,
@@ -201,10 +201,12 @@ public sealed class SecurityCollector
                 $"Windows build could not be evaluated from value '{profile.WindowsBuild}'. No system settings were changed.");
         }
 
+        var buildDisplay = BuildDisplay(build, profile.WindowsBuild);
+
         if (build < 19045)
         {
             return new SecurityCheckResult(
-                $"Build {build}",
+                buildDisplay,
                 HealthStatus.Critical,
                 "Windows build appears older than the final Windows 10 22H2 build baseline. Recommend technician review for support status and upgrade planning. No update or upgrade was started.");
         }
@@ -212,15 +214,37 @@ public sealed class SecurityCollector
         if (build < 22000)
         {
             return new SecurityCheckResult(
-                $"Build {build}",
+                buildDisplay,
                 HealthStatus.AttentionNeeded,
                 "Windows 10 is nearing or past its mainstream support window depending on the current date and edition. Recommend technician review for lifecycle planning. No update or upgrade was started.");
         }
 
         return new SecurityCheckResult(
-            $"Build {build}",
+            buildDisplay,
             HealthStatus.Good,
             "Windows build appears to be Windows 11 or newer based on the build number. Lifecycle status should still be confirmed for the installed edition.");
+    }
+
+    private static bool TryParseBaseWindowsBuild(string windowsBuild, out int build)
+    {
+        build = 0;
+        if (DiagnosticValueFormatter.IsUnavailable(windowsBuild))
+        {
+            return false;
+        }
+
+        var baseBuild = windowsBuild.Split('.', 2)[0].Trim();
+        return int.TryParse(baseBuild, out build);
+    }
+
+    private static string BuildDisplay(int baseBuild, string reportedBuild)
+    {
+        if (string.Equals(baseBuild.ToString(), reportedBuild, StringComparison.OrdinalIgnoreCase))
+        {
+            return $"Build {baseBuild}";
+        }
+
+        return $"Build {baseBuild} (reported {reportedBuild})";
     }
 
     private static bool? ReadBool(ManagementBaseObject result, string propertyName)

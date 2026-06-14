@@ -10,6 +10,7 @@
     <ApplicationIcon />
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="PDFsharp" Version="6.2.0" />
     <PackageReference Include="System.Diagnostics.EventLog" Version="8.0.0" />
     <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>

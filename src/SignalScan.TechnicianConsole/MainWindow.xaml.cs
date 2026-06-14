@@ -11,6 +11,7 @@ public partial class MainWindow : Window
 {
     private readonly ReadOnlyDiagnosticCollector _collector = new();
     private readonly MarkdownReportExporter _reportExporter = new();
+    private readonly PdfReportExporter _pdfReportExporter = new();
     private readonly IAiSummaryProvider _aiSummaryProvider = new OfflineAiSummaryProvider();
     private readonly ObservableCollection<FindingRow> _findingRows = new();
     private readonly ObservableCollection<FindingRow> _performanceFindingRows = new();
@@ -32,7 +33,8 @@ public partial class MainWindow : Window
     private async void RunScanButton_Click(object sender, RoutedEventArgs e)
     {
         RunScanButton.IsEnabled = false;
-        ExportReportButton.IsEnabled = false;
+        ExportPdfReportButton.IsEnabled = false;
+        ExportMarkdownDraftButton.IsEnabled = false;
         GenerateOfflineSummaryButton.IsEnabled = false;
         StatusMessageTextBlock.Text = "Collecting read-only diagnostics...";
 
@@ -41,7 +43,8 @@ public partial class MainWindow : Window
             _lastScanResult = await _collector.CollectAsync();
             RenderScan(_lastScanResult);
             ApplyDefaultRecommendationText(_lastScanResult);
-            ExportReportButton.IsEnabled = true;
+            ExportPdfReportButton.IsEnabled = true;
+            ExportMarkdownDraftButton.IsEnabled = true;
             GenerateOfflineSummaryButton.IsEnabled = true;
             StatusMessageTextBlock.Text = "Read-only scan complete. Review findings before exporting a report draft.";
         }
@@ -74,7 +77,45 @@ public partial class MainWindow : Window
         StatusMessageTextBlock.Text = "Offline draft summary generated. Review and edit before exporting a report draft.";
     }
 
-    private async void ExportReportButton_Click(object sender, RoutedEventArgs e)
+    private async void ExportPdfReportButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_lastScanResult is null)
+        {
+            return;
+        }
+
+        var dialog = new SaveFileDialog
+        {
+            Title = "Export SignalScan PDF Report",
+            Filter = "PDF report (*.pdf)|*.pdf",
+            FileName = $"SignalScan-{_lastScanResult.SystemProfile.ComputerName}-{DateTime.Now:yyyyMMdd-HHmm}.pdf",
+            AddExtension = true,
+            OverwritePrompt = true
+        };
+
+        if (dialog.ShowDialog(this) != true)
+        {
+            return;
+        }
+
+        try
+        {
+            await _pdfReportExporter.ExportAsync(dialog.FileName, _lastScanResult, BuildReportContext());
+            StatusMessageTextBlock.Text = $"PDF report exported: {dialog.FileName}";
+        }
+        catch (Exception ex)
+        {
+            StatusMessageTextBlock.Text = $"PDF export failed: {ex.Message}";
+            MessageBox.Show(
+                this,
+                "SignalScan could not export the PDF report. No system changes were made.",
+                "SignalScan",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+        }
+    }
+
+    private async void ExportMarkdownDraftButton_Click(object sender, RoutedEventArgs e)
     {
         if (_lastScanResult is null)
         {
@@ -98,7 +139,7 @@ public partial class MainWindow : Window
         try
         {
             await _reportExporter.ExportAsync(dialog.FileName, _lastScanResult, BuildReportContext());
-            StatusMessageTextBlock.Text = $"Report draft exported: {dialog.FileName}";
+            StatusMessageTextBlock.Text = $"Markdown draft exported: {dialog.FileName}";
         }
         catch (Exception ex)
         {

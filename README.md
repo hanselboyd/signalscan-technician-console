@@ -79,7 +79,7 @@ The current dashboard can:
 - Show read-only security posture findings for Windows Defender, firewall profiles, BitLocker, local administrator count, and Windows version support where available.
 - Display findings using the required status language: Good, Attention Needed, Critical, and Review Required.
 - Collect technician notes, a technician-reviewed summary, a next-step recommendation, and a recommended service package.
-- Export a branded Markdown report draft with the required disclaimer.
+- Export a branded client-facing PDF report and a Markdown draft/debug report with the required disclaimer.
 
 ## Task 2 Read-Only System Profile
 
@@ -186,6 +186,17 @@ Task 7 uses `OfflineAiSummaryProvider`, a deterministic mock provider that:
 
 The offline provider does not use API keys, network calls, cloud sync, telemetry, or external AI services. It does not send diagnostic data anywhere. It does not auto-export, auto-finalize, repair, clean up, delete files, write registry keys, modify services, change drivers, change Defender/firewall/BitLocker settings, manage users, change Windows Update, or modify startup items.
 
+## Task 8 PDF Report Export
+
+SignalScan can export:
+
+- A branded client-facing PDF report
+- A Markdown draft/debug report
+
+Both export formats use only the already-collected `ScanResult` and technician-entered report context. Export does not collect new diagnostics, call external services, sync data to the cloud, run AI providers, repair, clean up, delete files, write registry keys, modify services, change drivers, change Defender/firewall/BitLocker settings, manage users, change Windows Update, or modify startup items.
+
+PDF export uses the `PDFsharp` NuGet package. PDFsharp is documented by its project as MIT licensed, which is suitable for commercial use with normal license compliance. The app does not use Microsoft Office automation, Word, Edge, Chrome, browser rendering, printer drivers, or system print services to generate reports.
+
 The current dashboard does not:
 
 - Install updates.
@@ -202,7 +213,7 @@ The current dashboard does not:
 - Remove malware.
 - Perform cleanup or automatic repairs.
 
-PDF export, AI summary generation, deeper maintenance/security checks, and local scan history are intentionally left for later tasks in `CODEX_TASKS.md`.
+Deeper maintenance/security checks and local scan history are intentionally left for later tasks in `CODEX_TASKS.md`.
 
 ## Build and Run
 

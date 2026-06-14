@@ -69,7 +69,8 @@
                 <TextBlock Text="Actions" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
                 <TextBlock Text="All actions are read-only or report export only. Technician summary and recommendation text must be reviewed before export." Foreground="#5D6B7F" Margin="0,6,0,12" TextWrapping="Wrap" />
                 <Button x:Name="RunScanButton" Content="Run Read-Only Scan" Background="{StaticResource SignalBlue}" Foreground="White" Click="RunScanButton_Click" Margin="0,0,0,10" />
-                <Button x:Name="ExportReportButton" Content="Export Report Draft" Click="ExportReportButton_Click" Margin="0,0,0,10" IsEnabled="False" />
+                <Button x:Name="ExportPdfReportButton" Content="Export PDF Report" Click="ExportPdfReportButton_Click" Margin="0,0,0,10" IsEnabled="False" />
+                <Button x:Name="ExportMarkdownDraftButton" Content="Export Markdown Draft" Click="ExportMarkdownDraftButton_Click" Margin="0,0,0,10" IsEnabled="False" />
                 <TextBlock x:Name="StatusMessageTextBlock" Text="Ready to scan." Foreground="#5D6B7F" TextWrapping="Wrap" />
               </StackPanel>
             </Border>
@@ -111,8 +112,8 @@
 
               <Border Grid.Column="2" Background="White" BorderBrush="{StaticResource PanelBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
-                  <TextBlock Text="Report Export Scaffolding" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
-                  <TextBlock Text="Version 1 exports a branded Markdown report draft. PDF export is intentionally left for the dedicated PDF task." Margin="0,10,0,0" TextWrapping="Wrap" />
+                  <TextBlock Text="Report Export" FontSize="18" FontWeight="Bold" Foreground="{StaticResource SignalNavy}" />
+                  <TextBlock Text="Export a branded client-facing PDF report or a Markdown draft/debug report from the current read-only scan." Margin="0,10,0,0" TextWrapping="Wrap" />
                 </StackPanel>
               </Border>
             </Grid>
